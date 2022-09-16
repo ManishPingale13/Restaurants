@@ -1,2 +1,2 @@
-Creating a DJango Restaurant site using
-AWS,RDS,MySQL
+# Creating a DJango Restaurant Site
+Technologies used AWS,RDS,MySQL
