@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-!djmcpg$vwpzu!a)i9&b0!44f-_lax$=chloacz!v*pv34hkn5"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 0
 
-ALLOWED_HOSTS = ['35.88.250.163','127.0.0.1']
+ALLOWED_HOSTS = ['35.88.250.163','127.0.0.1','34.217.50.171']
 
 
 # Application definition
@@ -73,13 +73,24 @@ WSGI_APPLICATION = "Restaurants.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
-
+else:
+    DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.mysql",
+                "NAME":'myrestaurant', #os.environ.get('NAME'),
+                "USER":'admin', #os.environ.get('USER'),
+                "PASSWORD": '12345678',#os.environ.get('PASSWORD'),
+                "HOST":'mysql-res.c4ctuc8g0dxj.us-west-2.rds.amazonaws.com', #os.environ.get('HOST'),
+                "PORT": '3306',#os.environ.get('PORT'),
+            }
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -116,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
