@@ -53,7 +53,6 @@ def signupAuth(request):
         fname = request.POST['fname']
         lname = request.POST['lname']
         pass1 = request.POST['pass1']
-        pass2 = request.POST['pass2']
 
         # check for errorneous input
         if len(username)>10:
@@ -62,10 +61,7 @@ def signupAuth(request):
 
         if not username.isalnum():
             messages.error(request, " User name should only contain letters and numbers")
-            return redirect('home')
-        if (pass1!= pass2):
-             messages.error(request, " Passwords do not match")
-             return redirect('home')
+            return redirect('home')        
 
         #Create the user
         user = User.objects.create_user(username,email,pass1)
