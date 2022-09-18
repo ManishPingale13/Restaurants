@@ -1,6 +1,9 @@
+import imp
+from multiprocessing.spawn import import_main_path
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -9,18 +12,14 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     return render(request, 'home/home.html')
 
-
 def menu(request):
     return render(request, 'home/menu.html')
-
 
 def cart(request):
     return render(request, 'home/cart.html')
 
-
 def about(request):
     return render(request, 'home/about.html')
-
 
 def loginAuth(request):
     if request.method == "POST":
@@ -37,9 +36,9 @@ def loginAuth(request):
             messages.error(request, "Invalid credentials")
             return redirect("home")
     else:
-        return render(request, 'home/about.html')
+        return render(request, 'home/login.html')
 
-
+@login_required
 def logoutAuth(request):
     logout(request)
     messages.success(request, "Successfully logged out!")
@@ -77,4 +76,4 @@ def signupAuth(request):
         return redirect('home')
 
     else:
-        return render(request,'home/about.html')
+        return render(request,'home/signup.html')
