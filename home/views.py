@@ -1,8 +1,9 @@
-import imp
+import json
 from multiprocessing.spawn import import_main_path
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from MyRestaurant.models import Order, Food
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
@@ -12,14 +13,19 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     return render(request, 'home/home.html')
 
+
 def menu(request):
-    return render(request, 'home/menu.html')
+    food = Food.objects.all()
+    return render(request, 'home/menu.html', {'foods': food})
+
 
 def cart(request):
     return render(request, 'home/cart.html')
 
+
 def about(request):
     return render(request, 'home/about.html')
+
 
 def loginAuth(request):
     if request.method == "POST":
@@ -38,6 +44,7 @@ def loginAuth(request):
     else:
         return render(request, 'home/login.html')
 
+
 @login_required
 def logoutAuth(request):
     logout(request)
@@ -55,21 +62,26 @@ def signupAuth(request):
         pass1 = request.POST['pass1']
 
         # check for errorneous input
-        if len(username)>10:
-            messages.error(request, " Your user name must be under 10 characters")
+        if len(username) > 10:
+            messages.error(
+                request, " Your user name must be under 10 characters")
             return redirect('home')
 
         if not username.isalnum():
-            messages.error(request, " User name should only contain letters and numbers")
-            return redirect('home')        
+            messages.error(
+                request, " User name should only contain letters and numbers")
+            return redirect('home')
 
-        #Create the user
-        user = User.objects.create_user(username,email,pass1)
+        # Create the user
+        user = User.objects.create_user(username, email, pass1)
         user.first_name = fname
         user.last_name = lname
         user.save()
-        messages.success(request,"Your account has been successfully created!")
+        cart = Order(user=user, food_json=json.dumps([]))
+        cart.save()
+        messages.success(
+            request, "Your account has been successfully created!")
         return redirect('home')
 
     else:
-        return render(request,'home/signup.html')
+        return render(request, 'home/signup.html')
