@@ -151,8 +151,7 @@
       </div>
     </nav> 
     
-    
-
+  
     {% for message in messages  %}            
       <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             <strong></strong> {{ message }}
@@ -160,7 +159,7 @@
       </div>
       {% endfor %}  
 
-
+      
       {% block body %}{% endblock body %}
 
     <script
@@ -178,5 +177,8 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
+
+    {% block script %}{% endblock script %}
+
   </body>
 </html>
