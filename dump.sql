@@ -1,6 +1,5 @@
-PRAGMA foreign_keys=OFF;
-BEGIN TRANSACTION;
-CREATE TABLE IF NOT EXISTS "MyRestaurant_food" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(200) NOT NULL, "price" integer NOT NULL, "image" varchar(100) NOT NULL);
+START TRANSACTION;
+CREATE TABLE IF NOT EXISTS MyRestaurant_food ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(200) NOT NULL, "price" integer NOT NULL, "image" varchar(100) NOT NULL);
 INSERT INTO MyRestaurant_food VALUES(3,'Panner Cheese Pizza',249,'images/pan_64Z2RWy.jpg');
 INSERT INTO MyRestaurant_food VALUES(4,'Chicken Cheese Pizza',349,'images/piz.jpg');
 INSERT INTO MyRestaurant_food VALUES(5,'Jeera rice',100,'images/rice.jpg');
