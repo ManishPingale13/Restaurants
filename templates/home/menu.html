@@ -5,7 +5,7 @@
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
       <img src="media/{{food.image}}" class="card-img-top" alt="..." />
-      <div class="card-body">
+      <div class="card-body x{{food.id}}">
         <h5 class="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
         <a id="{{food.id}}" class="btn btn-primary trigger">Add to cart</a>
@@ -39,15 +39,15 @@
 {% endblock body %} {% block script %}
 
 <script>
-  function addElement(cart, id) {
+  function addElement(cart,name) {
     for (i in cart.food)
-      if (cart.food[i].id == id) {
+      if (cart.food[i].name == name) {
         cart.food[i].qty++;
         return;
       }
 
     cart["food"].push({
-      id: id,
+      name:name,
       qty: 1,
     });
     return;
@@ -60,18 +60,18 @@
       };
     else 
       cart = JSON.parse(localStorage.getItem("cart"));
-      
-    if (!$.isEmptyObject(cart.food)) 
-      addElement(cart, this.id);
-    else
+
+    var fName = $(this).parent().closest("div").children('h5').text();      
+    if (!$.isEmptyObject(cart.food)) {
+      addElement(cart,fName);
+    } else
       cart["food"] = [
         {
-          id: this.id,
+          name:fName,
           qty: 1,
         },
       ];
-
-    console.log("cart is :", cart);
+    console.log(cart)
     localStorage.setItem("cart", JSON.stringify(cart));
   });
 </script>
