@@ -76,9 +76,7 @@ def signupAuth(request):
         user = User.objects.create_user(username, email, pass1)
         user.first_name = fname
         user.last_name = lname
-        user.save()
-        cart = Order(user=user, food_json=json.dumps([]))
-        cart.save()
+        user.save()       
         messages.success(
             request, "Your account has been successfully created!")
         return redirect('home')
