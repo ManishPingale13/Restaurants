@@ -1,1 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
+
+{% block body %}
+
+<div class="container">
+    <div class="col my-4">
+        <h2>Your Cart</h2>
+        <div class="my-4">
+            <ul class="list-group" id="citems">
+            </ul>
+        </div>
+    </div>
+</div>
+
+  {% endblock body %} 
+  
+  {% block script %}
+  <script>
+    if (localStorage.getItem("cart") != null) {
+      cart = JSON.parse(localStorage.getItem("cart"));
+      for(i in cart.food){
+        console.log(cart.food[i])
+        let name = cart.food[i].name;
+        let qty = cart.food[i].qty; 
+        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+            ${name}
+            <span class="badge bg-primary rounded-pill">${qty}</span>
+            </li>`
+        $('#citems').append(mystr);
+      }
+    }
+  </script>
+  {% endblock script %}
+</div>
