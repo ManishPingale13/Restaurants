@@ -30,9 +30,6 @@ def orders(request):
             'food':json.loads(i.food_json),
         })
     
-    for i in orders:
-        print(i) 
-    print(orders[4]['food']['food'][1])
     return render(request, 'home/orders.html',{'orders':orders})
 
 
