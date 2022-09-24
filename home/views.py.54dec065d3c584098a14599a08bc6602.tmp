@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -26,14 +25,11 @@ def orders(request):
     orders=[]
     for i in order:
         orders.append({
-            'id':i.id,
-            'food':json.loads(i.food_json),
+            'id':1,
+            'food'
         })
-    
-    for i in orders:
-        print(i) 
-    print(orders[4]['food']['food'][1])
-    return render(request, 'home/orders.html',{'orders':orders})
+
+    return render(request, 'home/orders.html', {'orders': order})
 
 
 def menu(request):
