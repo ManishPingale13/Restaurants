@@ -1,5 +1,3 @@
-import json
-from multiprocessing.spawn import import_main_path
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -13,6 +11,15 @@ from django.contrib.auth import authenticate, login, logout
 def index(request):
     return render(request, 'home/home.html')
 
+@login_required
+def orders(request):
+    if request.method == "POST":
+        foodJson = request.POST.get('foodJson')
+        user = request.user
+        order = Order(user=user,food_json=foodJson)
+        order.save()
+    
+    return render(request, 'home/orders.html')
 
 def menu(request):
     food = Food.objects.all()
