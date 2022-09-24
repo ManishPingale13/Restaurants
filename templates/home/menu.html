@@ -1,12 +1,23 @@
 {% extends 'base.html' %} {% block body %} {% load static %}
-
+<div class="position-fixed bottom-0 end-0 p-3 " style="z-index: 11">
+  <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">24x7 Restaurant</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Food added to cart!
+    </div>
+  </div>
+</div>
 <div class="row">
+ 
   {% for food in foods %}
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
       <img src="media/{{food.image}}" class="card-img-top" alt="..." />
       <div class="card-body x{{food.id}}">
-        <h5 class="card-text">{{food.name}}</h5>
+        <h5 c`lass="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
         <a id="{{food.id}}" class="btn btn-primary trigger">Add to cart</a>
       </div>
@@ -14,37 +25,16 @@
   </div>
   {% endfor %}
 
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div
-      id="liveToast"
-      class="toast hide"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header">
-        <strong class="me-auto">Bootstrap</strong>
-        <small>11 mins ago</small>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="toast-body">Hello, world! This is a toast message.</div>
-    </div>
-  </div>
-</div>
 {% endblock body %} {% block script %}
 
 <script>
+
   function addElement(cart,name) {
     for (i in cart.food)
-      if (cart.food[i].name == name) {
-        cart.food[i].qty++;
-        return;
-      }
+    if (cart.food[i].name == name) {
+      cart.food[i].qty++;
+      return;
+    }
 
     cart["food"].push({
       name:name,
@@ -54,25 +44,30 @@
   }
 
   $(".trigger").on("click", function () {
-    if (localStorage.getItem("cart") == null)
-      var cart = {
-        food: {},
-      };
-    else 
-      cart = JSON.parse(localStorage.getItem("cart"));
+    {% if request.user.is_authenticated %}
+    $("#liveToast").toast({ delay: 2000 })
+    $("#liveToast").toast("show")
 
-    var fName = $(this).parent().closest("div").children('h5').text();      
-    if (!$.isEmptyObject(cart.food)) {
-      addElement(cart,fName);
-    } else
-      cart["food"] = [
+      if (localStorage.getItem("cart") == null)
+        var cart = { food: {} };
+      else
+        cart = JSON.parse(localStorage.getItem("cart"));
+
+      var fName = $(this).parent().closest("div").children('h5').text();
+      if (!$.isEmptyObject(cart.food))
+        addElement(cart,fName);
+      else
+        cart["food"] = [
         {
           name:fName,
           qty: 1,
         },
-      ];
-    console.log(cart)
-    localStorage.setItem("cart", JSON.stringify(cart));
+        ];
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+    {% else %}
+         alert("You have to login first")
+    {% endif %}
   });
 </script>
 {% endblock script %}

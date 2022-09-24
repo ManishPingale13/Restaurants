@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from MyRestaurant.models import Order, Food
+from home.models import Order, Food
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
-
 
 def index(request):
     return render(request, 'home/home.html')
@@ -18,6 +17,7 @@ def orders(request):
         user = request.user
         order = Order(user=user,food_json=foodJson)
         order.save()
+        messages.success(request,"Order has been placed!")
     
     return render(request, 'home/orders.html')
 
