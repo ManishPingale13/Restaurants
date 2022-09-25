@@ -15,7 +15,7 @@
   {% for food in foods %}
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
-      <img src="media/{{food.image}}" class="card-img-top" alt="..." />
+      <img src="{% static '' %}{{food.image}}" class="card-img-top" alt="..." />
       <div class="card-body x{{food.id}}">   
         <h5 class="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
