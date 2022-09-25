@@ -3,38 +3,57 @@
   <div class="col my-4">
     <h2>Your Orders</h2>
     <div class="my-4">
-      {% for order in orders %}
+    {% for order in orders %}
       <div class="accordion" id="accordionExample">
-        <div class="accordion-item x{{order.id}}">
-          <h2 class="accordion-header" id="heading{{order.id}}">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="{{order.id}}">
             <button
               class="accordion-button collapsed"
               type="button"
               data-toggle="collapse"
-              data-target="#collapse{{order.id}}"
+              data-target="#collapse{{forloop.counter}}"
               aria-expanded="false"
-              aria-controls="collapse{{order.id}}"
-            >
-              #{{order.id}} Order
+              aria-controls="collapse{{forloop.counter}}">
+              #{{forloop.counter}} Order
             </button>
           </h2>
-          <div
-            id="collapse{{order.id}}"
+            <div
+            id="collapse{{forloop.counter}}"
             class="accordion-collapse collapse collapse"
-            aria-labelledby="heading{{order.id}}"
-            data-bs-parent="#accordionExample"
-          >
+            aria-labelledby="heading{{forloop.counter}}"
+            data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <ul class="list-group list-group-numbered ">
+              <ul class="list-group list-group-numbered">
+                {% for food in order.foods.food %}
                 <li
                   class="list-group-item d-flex justify-content-between align-items-start"
                 >
-                  <div class="ms-2 me-auto">A list item</div>
-                  <span class="badge bg-primary rounded-pill">14</span>
+                  <div class="ms-2 me-auto">{{food.name}}</div>
+                  <span class="badge bg-primary rounded-pill"
+                    >{{food.qty}}</span
+                  >
                 </li>
+                {% endfor %}
               </ul>
+              <h5 class=" mt-1 mx-2 card-title d-flex justify-content-end form-label">
+              {% if order.is_delivered %}
+                Status: Delivered!              
+              {% else %}
+              Status: Preparing!
+              {% endif %}
+            </h5>
+
             </div>
           </div>
+        </div>
+      </div>
+      {%empty%}       
+      <div class="card ">
+        <div class="card-body  d-flex">
+          <div class=" ms-2 me-auto ">
+            <h5 class="card-title "> You haven't ordered anything yet</h5>           
+          </div>          
+          <a href="/menu" class="btn btn-primary   d-flex justify-content-end">Order Now!</a>
         </div>
       </div>
       {% endfor %}
@@ -42,7 +61,5 @@
   </div>
 </div>
 {% endblock body %} {% block script %}
-<script>
-  
-</script>
+<script></script>
 {% endblock script %}
