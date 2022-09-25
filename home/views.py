@@ -22,11 +22,12 @@ def orders(request):
         order.save()
         messages.success(request, "Order has been placed!")
 
-    order = Order.objects.all()
+    order = Order.objects.all().order_by('-is_delivered','-id')
     orders=[]
     for i in order:        
         orders.append({
             'id':i.id,
+            'is_delivered':i.is_delivered,
             'foods':json.loads(i.food_json),
         })        
     
