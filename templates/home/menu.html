@@ -15,8 +15,18 @@
   {% for food in foods %}
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
+<<<<<<< HEAD
 	    <img src="{% static ''%}{{food.image}}" class="card-img-top" alt="..." /> 
 	 <div class="card-body x{{food.id}}">   
+=======
+<<<<<<< HEAD
+      <img src="media/{{food.image}}" class="card-img-top" alt="..." />
+      {% comment %} <img src="{% static 'images/' %}{{food.image}}" class="card-img-top" alt="..." /> {% endcomment %}
+=======
+      <img src="{% static '' %}{{food.image}}" class="card-img-top" alt="..." />
+>>>>>>> 920794d3a48886b4ec169104b748c299281159d9
+      <div class="card-body x{{food.id}}">   
+>>>>>>> bbbb5f4aff57cb6c0d389d3897cf7bdea775d49f
         <h5 class="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
         <a id="{{food.id}}" class="btn btn-primary trigger">Add to cart</a>
