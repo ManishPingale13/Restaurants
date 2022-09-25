@@ -13,12 +13,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
-#Changing Error constant
+# Changing Error constant
 MESSAGE_TAGS = {
-    messages.ERROR:'danger'
+    messages.ERROR: 'danger'
 }
 
-#Redirect url
+# Redirect url
 LOGIN_URL = '/login'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,22 +32,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-!djmcpg$vwpzu!a)i9&b0!44f-_lax$=chloacz!v*pv34hkn5"
 
 # SECURITY WARNING: don't run with debug turned on in production
-DEBUG =1
+DEBUG = 0
 
-ALLOWED_HOSTS = ['127.0.0.1','34.217.50.171']
+ALLOWED_HOSTS = ['127.0.0.1', '34.217.50.171']
 
 
 # Application definition
 
-INSTALLED_APPS = [ 
-    "home",
-    "dashboard",
+INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "home",
+    "dashboard",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -93,15 +95,16 @@ if DEBUG:
     }
 else:
     DATABASES = {
-            "default": {
-                "ENGINE": "django.db.backends.mysql",
-                "NAME":'myrestaurant', #os.environ.get('NAME'),
-                "USER":'admin', #os.environ.get('USER'),
-                "PASSWORD": '12345678',#os.environ.get('PASSWORD'),
-                "HOST":'mysql-res.c4ctuc8g0dxj.us-west-2.rds.amazonaws.com', #os.environ.get('HOST'),
-                "PORT": '3306',#os.environ.get('PORT'),
-            }
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": 'myrestaurant',  # os.environ.get('NAME'),
+            "USER": 'admin',  # os.environ.get('USER'),
+            "PASSWORD": '12345678',  # os.environ.get('PASSWORD'),
+            # os.environ.get('HOST'),
+            "HOST": 'mysql-res.c4ctuc8g0dxj.us-west-2.rds.amazonaws.com',
+            "PORT": '3306',  # os.environ.get('PORT'),
         }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -134,16 +137,30 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "static/"
+# S3 BUCKET CONFIG
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media/"
+AWS_ACCESS_KEY_ID = 'AKIAS6ENUTQNOTQ45WWF'
 
+AWS_SECRET_ACCESS_KEY = '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'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+AWS_STORAGE_BUCKET_NAME = 'mydjango-static-bucket'
+
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+
+AWS_QUERYSTRING_AUTH = False
+
+AWS_HEADERS = {'Access-Control-Allow-Origin': '*', }
+
+DEFAULT_FILE_STORAGE = 'storage_backend.MediaStorage'
+
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+# 'https://mydjango-static-bucket.s3.amazonaws.com/media/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+# MEDIA_ROOT = BASE_DIR / "media/"
+
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+# STATIC_ROOT = BASE_DIR / "static/"
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

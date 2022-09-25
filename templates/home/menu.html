@@ -16,8 +16,8 @@
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
       <img src="media/{{food.image}}" class="card-img-top" alt="..." />
-      <div class="card-body x{{food.id}}">
-        <h5 c`lass="card-text">{{food.name}}</h5>
+      <div class="card-body x{{food.id}}">   
+        <h5 class="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
         <a id="{{food.id}}" class="btn btn-primary trigger">Add to cart</a>
       </div>
@@ -28,7 +28,6 @@
 {% endblock body %} {% block script %}
 
 <script>
-
   function addElement(cart,name) {
     for (i in cart.food)
     if (cart.food[i].name == name) {
