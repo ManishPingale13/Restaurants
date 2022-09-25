@@ -3,35 +3,39 @@
   <div class="col my-4">
     <h2>Your Orders</h2>
     <div class="my-4">
-      {% for order in orders %}
+    {% for order in orders %}
       <div class="accordion" id="accordionExample">
-        <div class="accordion-item x{{order.id}}">
-          <h2 class="accordion-header" id="heading{{order.id}}">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="{{order.id}}">
             <button
               class="accordion-button collapsed"
               type="button"
               data-toggle="collapse"
-              data-target="#collapse{{order.id}}"
+              data-target="#collapse{{forloop.counter}}"
               aria-expanded="false"
-              aria-controls="collapse{{order.id}}"
+              aria-controls="collapse{{forloop.counter}}"
             >
-              #{{order.id}} Order
+              #{{forloop.counter}} Order
             </button>
           </h2>
           <div
-            id="collapse{{order.id}}"
+            id="collapse{{forloop.counter}}"
             class="accordion-collapse collapse collapse"
-            aria-labelledby="heading{{order.id}}"
+            aria-labelledby="heading{{forloop.counter}}"
             data-bs-parent="#accordionExample"
           >
             <div class="accordion-body">
-              <ul class="list-group list-group-numbered ">
+              <ul class="list-group list-group-numbered">
+                {% for food in order.foods.food %}
                 <li
                   class="list-group-item d-flex justify-content-between align-items-start"
                 >
-                  <div class="ms-2 me-auto">A list item</div>
-                  <span class="badge bg-primary rounded-pill">14</span>
+                  <div class="ms-2 me-auto">{{food.name}}</div>
+                  <span class="badge bg-primary rounded-pill"
+                    >{{food.qty}}</span
+                  >
                 </li>
+                {% endfor %}
               </ul>
             </div>
           </div>
@@ -42,7 +46,5 @@
   </div>
 </div>
 {% endblock body %} {% block script %}
-<script>
-  
-</script>
+<script></script>
 {% endblock script %}

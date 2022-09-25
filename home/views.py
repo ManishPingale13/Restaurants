@@ -24,11 +24,11 @@ def orders(request):
 
     order = Order.objects.all()
     orders=[]
-    for i in order:
+    for i in order:        
         orders.append({
             'id':i.id,
-            'food':json.loads(i.food_json),
-        })
+            'foods':json.loads(i.food_json),
+        })        
     
     return render(request, 'home/orders.html',{'orders':orders})
 
