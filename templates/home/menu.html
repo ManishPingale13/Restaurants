@@ -15,12 +15,7 @@
   {% for food in foods %}
   <div class="col d-flex justify-content-center mt-4">
     <div class="card" style="width: 18rem">
-<<<<<<< HEAD
-      <img src="media/{{food.image}}" class="card-img-top" alt="..." />
-      {% comment %} <img src="{% static 'images/' %}{{food.image}}" class="card-img-top" alt="..." /> {% endcomment %}
-=======
       <img src="{% static '' %}{{food.image}}" class="card-img-top" alt="..." />
->>>>>>> 920794d3a48886b4ec169104b748c299281159d9
       <div class="card-body x{{food.id}}">   
         <h5 class="card-text">{{food.name}}</h5>
         <p class="card-text">{{food.price}}</p>
@@ -29,7 +24,7 @@
     </div>
   </div>
   {% endfor %}
-
+{% comment %}  {% endcomment %}
 {% endblock body %} {% block script %}
 
 <script>
