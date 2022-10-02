@@ -1,22 +1,78 @@
 {% extends 'dashboard/dashboard.html' %} {% block body %}
-<div class="d-flex">
-  <h4>Select type of order</h4>
-  <div class="navbar-nav dropdown d-flex align-items-end">
+<div class="container">
+  <div class="d-flex justify-content-start align-items-center">
+    <h3>Select Order type</h3>
     <button
-      class="btn btn-secondary dropdown-toggle"
+      class="btn btn-secondary dropdown-toggle mx-3"
       type="button"
       data-toggle="dropdown"
       aria-expanded="false"
     >
-      Dropdown button
+      Order type
     </button>
-    <div class="">
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="#">Pending</a></li>
-          <li><a class="dropdown-item" href="#">Delievered</a></li>
-          <li><a class="dropdown-item" href="#">All</a></li>
-        </ul>
-      </div>
+    <div class="my-4">
+      <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item" id="pending">Pending</a></li>
+        <li><a class="dropdown-item" id="delievered">Delievered</a></li>
+        <li><a class="dropdown-item active" id="all">All</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Order</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{order.user}}</td>
+          {% if order.is_delivered %}
+          <td>Delievered!</td>
+          {% else %}
+          <td>Cooking!</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
-{% endblock body %}
+{% endblock body %} {% block js %}
+<script>
+  $("#pending").on("click", function (e) {
+    console.log("clicked")
+    var query = {
+      'pending': true,
+      'csrfmiddlewaretoken':'{{ csrf_token }}'
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/dashboard/",
+      data: query,
+      encode: true,
+    }).done(function (data) {
+      data = JSON.parse(data)
+      if(data['status']=='success'){
+        orders = data['orders']
+        for(i in orders){
+          console.log(orders[i])
+
+        }
+      }else{
+        alert("Failed to retrieve data!")
+      }
+    }).fail(function(data){
+      console.log(data)
+    })
+    ;
+  });
+</script>
+{% endblock js %}
