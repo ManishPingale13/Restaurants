@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard(request):
-    if not request.user.is_superuser:
+    if request.user.is_superuser:
         print("In Dashboard")
         return render(request,"dashboard/dashboard.html")
     else:
