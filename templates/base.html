@@ -10,11 +10,14 @@
       crossorigin="anonymous"
     />
   <style>
+    
     {% block css %}
     {% endblock css %}
   </style>
 
   </head>
+
+  {% block outBody %}{% endblock outBody %}
   <body>
     {% comment %} Nav Bar {% endcomment %}
     <nav class="navbar navbar-expand-lg  navbar-dark bg-dark">

@@ -1,0 +1,59 @@
+ {% extends 'base.html' %}
+
+{% block css %}
+/* Set height to 100% for body and html to enable the background image to cover the whole page: */
+body, html {
+  height: 100%
+}
+
+body{
+    padding:0;
+    margin:0;
+}
+
+.bgimg {
+  /* Background image */
+  background-image: url('https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80');
+  /* Full-screen */
+  height: 100%;
+  /* Center the background image */
+  background-position: center;
+  /* Scale and zoom in the image */
+  background-size: auto;
+  /* Add position: relative to enable absolutely positioned elements inside the image (place text) */
+  position: relative;
+  /* Add a white text color to all elements inside the .bgimg container */
+  color: white;
+  /* Add a font */
+  font-family: "Courier New", Courier, monospace;
+  /* Set the font-size to 25 pixels */
+  font-size: 25px;
+}
+
+/* Position text in the middle */
+.middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Style the <hr> element */
+hr {
+  margin: auto;
+  width: 40%;
+}
+{% endblock css %}
+
+{% block body %}
+<div class="bgimg">
+    <div class="middle">
+      <h1>COMING SOON.....</h1>
+      <hr>
+      <p>Under construction <br>Please check other pages </p>
+    </div>
+    
+  </div>
+{% endblock body %} 
+

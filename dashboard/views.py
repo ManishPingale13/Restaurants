@@ -8,6 +8,6 @@ from django.contrib.auth.decorators import login_required
 def dashboard(request):
     if request.user.is_superuser:
         print("In Dashboard")
-        return render(request,"dashboard/dashboard.html")
+        return render(request,"work.html")
     else:
         return render(request,"403.html")

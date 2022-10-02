@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def index(request):
-    return render(request, 'home/home.html')
+    return render(request,"work.html")
 
 
 @login_required
