@@ -22,7 +22,7 @@ def orders(request):
         order.save()
         messages.success(request, "Order has been placed!")
 
-    order = Order.objects.all().order_by('-is_delivered','-id')
+    order = Order.objects.all().filter(user=request.user).order_by('is_delivered','-id')
     orders=[]
     for i in order:        
         orders.append({
