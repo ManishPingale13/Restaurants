@@ -1,5 +1,22 @@
-{% extends 'dashboard/dashboard.html' %}
-
-{% block body %}
-<h1>Orders</h1>
+{% extends 'dashboard/dashboard.html' %} {% block body %}
+<div class="d-flex">
+  <h4>Select type of order</h4>
+  <div class="navbar-nav dropdown d-flex align-items-end">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      data-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Dropdown button
+    </button>
+    <div class="">
+        <ul class="dropdown-menu dropdown-menu-dark">
+          <li><a class="dropdown-item" href="#">Pending</a></li>
+          <li><a class="dropdown-item" href="#">Delievered</a></li>
+          <li><a class="dropdown-item" href="#">All</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
 {% endblock body %}

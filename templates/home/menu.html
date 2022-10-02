@@ -28,7 +28,7 @@
 {% endblock body %} {% block script %}
 
 <script>
-  function addElement(cart,name) {
+  function addElement(cart,name,price) {
     for (i in cart.food)
     if (cart.food[i].name == name) {
       cart.food[i].qty++;
@@ -38,6 +38,7 @@
     cart["food"].push({
       name:name,
       qty: 1,
+      price:price,
     });
     return;
   }
@@ -53,19 +54,21 @@
         cart = JSON.parse(localStorage.getItem("cart"));
 
       var fName = $(this).parent().closest("div").children('h5').text();
+      var fPrice = parseInt($(this).parent().closest("div").children('p').text());
       if (!$.isEmptyObject(cart.food))
-        addElement(cart,fName);
+        addElement(cart,fName,fPrice);
       else
         cart["food"] = [
         {
           name:fName,
           qty: 1,
+          price:fPrice,
         },
         ];
 
         localStorage.setItem("cart", JSON.stringify(cart));
     {% else %}
-         alert("You have to login first")
+         alert("You have to login first!")
     {% endif %}
   });
 </script>
