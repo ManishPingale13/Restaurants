@@ -12,9 +12,9 @@
     </button>
     <div class="my-4">
       <ul class="dropdown-menu dropdown-menu-dark">
-        <li><a class="dropdown-item" id="pending">Pending</a></li>
-        <li><a class="dropdown-item" id="delievered">Delievered</a></li>
-        <li><a class="dropdown-item active" id="all">All</a></li>
+        <li><a class="dropdown-item filter1" id="pending">Pending</a></li>
+        <li><a class="dropdown-item filter1" id="delievered">Delievered</a></li>
+        <li><a class="dropdown-item active filter1" id="all">All</a></li>
       </ul>
     </div>
   </div>
@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         {% for order in orders %}
-        <tr>
+        <tr id="otable">
           <th scope="row">{{forloop.counter}}</th>
           <td>{{order.user}}</td>
           {% if order.is_delivered %}
@@ -46,33 +46,60 @@
 </div>
 {% endblock body %} {% block js %}
 <script>
-  $("#pending").on("click", function (e) {
-    console.log("clicked")
-    var query = {
-      'pending': true,
-      'csrfmiddlewaretoken':'{{ csrf_token }}'
-    };
+  $(".filter1").on("click", function (e) {
+    var query;
+    if (this.id == "pending") {
+      $(".dropdown-item").removeClass('active')
+      $(this).toggleClass('active');
+
+      console.log("Pending");
+      query = {
+        pending: true,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+    } else if (this.id == "delievered") {
+      $(".dropdown-item").removeClass('active')
+      $(this).toggleClass('active');
+      console.log("Delievered");
+      query = {
+        pending: false,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+    } else window.location.reload();
+
+    console.log(query);
 
     $.ajax({
       type: "POST",
       url: "/dashboard/",
       data: query,
       encode: true,
-    }).done(function (data) {
-      data = JSON.parse(data)
-      if(data['status']=='success'){
-        orders = data['orders']
-        for(i in orders){
-          console.log(orders[i])
-
-        }
-      }else{
-        alert("Failed to retrieve data!")
-      }
-    }).fail(function(data){
-      console.log(data)
     })
-    ;
+      .done(function (data) {
+        data = JSON.parse(data);
+        if (data["status"] == "success") {
+          orders = data["orders"];
+          $("table tbody").empty();
+          for (i in orders) {
+            console.log(orders[i]);
+            if (orders[i].is_delivered == true)
+              $("tbody").append(`
+                <tr><th scope='row'>${i}</th>
+                <td>${orders[i].user}</td>
+                <td>Delievered</td></tr>`);
+            else
+              $("tbody").append(`
+                <tr><th scope='row'>${i}</th>
+                <td>${orders[i].user}</td>
+                <td>Pending</td></tr>`);
+          }
+        } else {
+          alert("Failed to retrieve data!");
+        }
+      })
+      .fail(function (data) {
+        console.log(data);
+      });
   });
 </script>
 {% endblock js %}

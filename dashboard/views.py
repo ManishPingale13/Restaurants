@@ -1,5 +1,5 @@
 import json
-from turtle import pendown
+from turtle import pen, pendown
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from home.models import Order
@@ -20,9 +20,9 @@ def foods(request):
 def orders(request):
     if request.user.is_superuser:
         if request.method == "POST":
-            print(request.POST.get('pending'))
             pending = request.POST.get('pending')
-            if pending:
+            orders = []
+            if pending=='true':
                 orders = Order.objects.all().filter(is_delivered=False).order_by('-id')
             else:
                 orders = Order.objects.all().filter(is_delivered=True).order_by('-id')
