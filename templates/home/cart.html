@@ -5,6 +5,7 @@
 <div class="container">
     <div class="col my-4">
         <h2>Your Cart</h2>                
+        <h3 class="my-3">Total: Rs. <span id="totalPrice"></span> </h3>                
         <div class="my-4">
             <ul class="list-group" id="citems">
             </ul>
@@ -24,26 +25,56 @@
   
   {% block script %}
   <script>
+    let totalPrice=0;
     
     if (localStorage.getItem("cart") != null) {
       $('#foodJson').val(localStorage.getItem('cart'))     
       cart = JSON.parse(localStorage.getItem("cart"));
       for(i in cart.food){
-        console.log(cart.food[i])
         let name = cart.food[i].name;
         let qty = cart.food[i].qty; 
-        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+        totalPrice+=cart.food[i].price*qty;
+        mystr = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
             ${name}
-            <span class="badge bg-primary rounded-pill">${qty}</span>
-            </li>`
+            <div class="d-flex align-items-center">
+              <button id="${i}" class="plus badge rounded-pill btn btn-primary mx-2">+</button>
+              <span class="badge bg-primary rounded-pill ">${qty} </span>
+            <button id="${i}" class="minus badge rounded-pill btn btn-primary mx-2">-</button>
+            </div>
+          </li>
+          `
         $('#citems').append(mystr);
       }
+      $('#totalPrice').append(totalPrice)
     }else{
       mystr = `<label class="list-group-item d-flex justify-content-between align-items-center">
         Your Cart is empty      
         </label>`
     $('#citems').append(mystr);      
     }
+
+    $('.plus').on('click',function(e){
+        cart = JSON.parse(localStorage.getItem('cart'))
+        cart.food[this.id].qty+=1
+        localStorage.setItem("cart",JSON.stringify(cart))
+        location.reload(true)
+    });
+
+    $('.minus').on('click',function(e){
+      if(cart.food[this.id].qty>1){
+        cart = JSON.parse(localStorage.getItem('cart'))
+        cart.food[this.id].qty-=1
+        localStorage.setItem("cart",JSON.stringify(cart))
+        location.reload(true)
+    }else{
+      cart.food.splice(this.id,1)
+      localStorage.setItem("cart",JSON.stringify(cart))
+      location.reload(true)
+    }
+        
+    });
+    
     $("#orderNow").on('click',function(e){
       if(localStorage.getItem('cart')!=null){
         localStorage.clear()

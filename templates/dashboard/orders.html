@@ -1,5 +1,105 @@
-{% extends 'dashboard/dashboard.html' %}
+{% extends 'dashboard/dashboard.html' %} {% block body %}
+<div class="container">
+  <div class="d-flex justify-content-start align-items-center">
+    <h3>Select Order type</h3>
+    <button
+      class="btn btn-secondary dropdown-toggle mx-3"
+      type="button"
+      data-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Order type
+    </button>
+    <div class="my-4">
+      <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item filter1" id="pending">Pending</a></li>
+        <li><a class="dropdown-item filter1" id="delievered">Delievered</a></li>
+        <li><a class="dropdown-item active filter1" id="all">All</a></li>
+      </ul>
+    </div>
+  </div>
 
-{% block body %}
-<h1>Orders</h1>
-{% endblock body %}
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Order</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr id="otable">
+          <th scope="row">{{forloop.counter}}</th>
+          <td>{{order.user}}</td>
+          {% if order.is_delivered %}
+          <td>Delievered!</td>
+          {% else %}
+          <td>Cooking!</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock body %} {% block js %}
+<script>
+  $(".filter1").on("click", function (e) {
+    var query;
+    if (this.id == "pending") {
+      $(".dropdown-item").removeClass('active')
+      $(this).toggleClass('active');
+
+      console.log("Pending");
+      query = {
+        pending: true,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+    } else if (this.id == "delievered") {
+      $(".dropdown-item").removeClass('active')
+      $(this).toggleClass('active');
+      console.log("Delievered");
+      query = {
+        pending: false,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      };
+    } else window.location.reload();
+
+    console.log(query);
+
+    $.ajax({
+      type: "POST",
+      url: "/dashboard/",
+      data: query,
+      encode: true,
+    })
+      .done(function (data) {
+        data = JSON.parse(data);
+        if (data["status"] == "success") {
+          orders = data["orders"];
+          $("table tbody").empty();
+          for (i in orders) {
+            console.log(orders[i]);
+            if (orders[i].is_delivered == true)
+              $("tbody").append(`
+                <tr><th scope='row'>${i}</th>
+                <td>${orders[i].user}</td>
+                <td>Delievered</td></tr>`);
+            else
+              $("tbody").append(`
+                <tr><th scope='row'>${i}</th>
+                <td>${orders[i].user}</td>
+                <td>Pending</td></tr>`);
+          }
+        } else {
+          alert("Failed to retrieve data!");
+        }
+      })
+      .fail(function (data) {
+        console.log(data);
+      });
+  });
+</script>
+{% endblock js %}
