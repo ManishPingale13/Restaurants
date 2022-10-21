@@ -1,5 +1,116 @@
-{% extends 'dashboard/dashboard.html' %}
+{% extends 'dashboard/dashboard.html' %} {% block body %} {% load static %}
+<div class="container">
+  <div class="row">
+    {% for food in foods %}
+    <div class="col d-flex justify-content-center mt-4">
+      <div class="card" style="width: 18rem">
+        <img
+          src="{% static ''%}{{food.image}}"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body x{{food.id}}">
+          <h5 class="card-text">{{food.name}}</h5>
+          <p class="card-text">{{food.price}}</p>
+          <input type="hidden" value="{{food.id}}" id="hiddenId" />
+          <a
+            id="edit{{food.id}}"
+            class="btn btn-primary editor"
+            data-toggle="modal"
+            data-target="#editModal"
+            >Edit</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-{% block body %}
-<h1>Foods</h1>
-{% endblock body %}
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          id="editFood"
+          action="/dashboard/foods"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="FoodId" value="" id="foodId" />
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+              name="name"
+              required
+              type="text"
+              class="form-control"
+              id="name"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input
+              name="price"
+              required
+              type="text"
+              class="form-control"
+              id="price"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input
+              type="file"
+              name="image"
+              class="form-control"
+              id="image"
+              accept="image/*"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="editFood" class="btn btn-primary">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %} {% block js %}
+<script>
+  $(".editor").on("click", function (e) {
+    var name = $(this).parent().closest("div").children("h5").text();
+    var price = $(this).parent().closest("div").children("p").text();
+    var id = $(this).parent().closest("div").children("#hiddenId").val();
+    console;
+
+    $("#editModal #editFood #name").val(name);
+    $("#editModal #editFood #price").val(price);
+    $("#editModal #editFood #foodId").val(id);
+  });
+</script>
+{% endblock js %}
