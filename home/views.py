@@ -1,10 +1,12 @@
 import json
-from django.shortcuts import render, redirect
+
 from django.contrib import messages
-from django.contrib.auth.models import User
-from home.models import Order, Food
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+
+from home.models import Food, Order
 
 # Create your views here.
 

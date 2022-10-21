@@ -20,6 +20,15 @@
             data-target="#editModal"
             >Edit</a
           >
+          <button
+            id="delete{{food.id}}"
+            type="button"
+            class="btn btn-secondary deletor"
+            data-toggle="modal"
+            data-target="#confirmModal"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -27,7 +36,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Editing Modal -->
 <div
   class="modal fade"
   id="editModal"
@@ -100,13 +109,76 @@
     </div>
   </div>
 </div>
+
+<!--Delete confirmation Modal -->
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete an item</h5>
+        <button
+          type="button"
+          class="close btn-close"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="lead">Do you want to delete this item?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          No
+        </button>
+        <button type="button" class="btn btn-primary deleteConfirmed">
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock body %} {% block js %}
 <script>
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+
+  $(".deletor").on("click", function (e) {
+    var id = $(this).parent().closest("div").children("#hiddenId").val();
+    $(".deleteConfirmed").on("click", function () {
+      $.ajax({
+        type: "GET",
+        url: "/dashboard/delete/",
+        data: {
+          id: id,
+        },
+      })
+        .done(function (data) {
+          data = JSON.parse(data);
+          if (data["status"] == "success")
+            window.location.replace("/dashboard/foods");
+            
+          else if (data["status"] == "failed") alert("Error occured!");
+        })
+        .fail(function (data) {
+          console.log("failed", data);
+          alert("Try again later");
+        });
+    });
+  });
+
   $(".editor").on("click", function (e) {
     var name = $(this).parent().closest("div").children("h5").text();
     var price = $(this).parent().closest("div").children("p").text();
     var id = $(this).parent().closest("div").children("#hiddenId").val();
-    console;
 
     $("#editModal #editFood #name").val(name);
     $("#editModal #editFood #price").val(price);
