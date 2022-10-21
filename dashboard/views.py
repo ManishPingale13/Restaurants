@@ -30,7 +30,7 @@ def foods(request):
         name = request.POST.get('name')
         price = request.POST.get('price')
         foodId = request.POST.get('FoodId')
-        image = request.FILES["image"]
+        image = request.FILES.get("image",'')
         food = Food.objects.all().filter(id=foodId)[0]
 
         food.name, food.price = name, price
