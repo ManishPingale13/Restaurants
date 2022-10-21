@@ -29,6 +29,13 @@
         </div>
       </nav>
 
+      {% for message in messages  %}            
+      <div class=" mb-0 alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong></strong> {{ message }}
+            <button type="button" class="btn-close " data-dismiss="alert" aria-label="Close">
+      </div>
+      {% endfor %}
+
     <div class="container-fluid">
       <div class="row">
         <nav
@@ -63,17 +70,115 @@
           </div>
         </nav>
 
+      
+
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
           >
-            <h1 class="h2">Dashboard</h1>            
-          </div>
+            <h1 class="h2">Dashboard</h1>    
+            
+            
+  <div class="d-flex justify-content-start align-items-center">
+
+    <button
+      class="btn btn-primary mx-2 "
+      type="button"
+      data-toggle="modal"
+      data-target="#addModal"
+    >
+      Add an item
+    </button>
+  </div>
+</div>
           {% block body %}{% endblock body %}
          
         </main>
       </div>
     </div>
+
+    
+
+<!--Add item modal-->
+<div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          id="addFood"
+          action="/dashboard/foods"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="FoodId" value="-1" id="foodId" />
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+              name="name"
+              required
+              type="text"
+              class="form-control"
+              id="name"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input
+              name="price"
+              required
+              type="text"
+              class="form-control"
+              id="price"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input
+              type="file"
+              name="image"
+              class="form-control"
+              id="image"
+              accept="image/*"
+              required
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="submit" form="addFood" class="btn btn-primary">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script>
+      setTimeout(() => {
+        $('.alert').alert('close');
+      }, 2000);
+
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script

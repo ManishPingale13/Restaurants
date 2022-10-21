@@ -1,14 +1,27 @@
 import json
 
 import boto3
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from home.models import Food, Order
 
 # Create your views here.
+
+
+def deleteFood(request):
+    id = request.GET.get('id', '')
+    if id.strip():
+        food = Food.objects.get(id=id)
+        food.delete()
+        messages.success(request, "Successfully deleted")
+        return HttpResponse(json.dumps({
+            "status": "success",
+        }))
+    return redirect('foods')
 
 
 def customers(request):
@@ -30,16 +43,28 @@ def foods(request):
         name = request.POST.get('name')
         price = request.POST.get('price')
         foodId = request.POST.get('FoodId')
-        image = request.FILES.get("image",'')
-        food = Food.objects.all().filter(id=foodId)[0]
+        image = request.FILES.get("image", '')
+        
+        #If item exists then updates, else creates new item
+        try:
+            food = Food.objects.get(id=foodId)
+            # Updating the existing food item
+            if food:
+                food.name, food.price = name, price
+                if image:
+                    food.image = image
+                    upload(image)
+                food.save()
+                messages.success(request, "Item has been updated!")
 
-        food.name, food.price = name, price
-        if image != '':
-            food.image = image
+        # Creating new food item
+        except Food.DoesNotExist:
+            newFood = Food(name=name, price=price, image=image)
             upload(image)
+            newFood.save()
+            messages.success(request, "New item successfully added!")
 
-        food.save()
-
+        return redirect('foods')
     menu = Food.objects.all()
     return render(request, 'dashboard/foods.html', {"foods": menu})
 
