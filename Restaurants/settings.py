@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+
 from django.contrib.messages import constants as messages
 
 # Changing Error constant
@@ -32,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-!djmcpg$vwpzu!a)i9&b0!44f-_lax$=chloacz!v*pv34hkn5"
 
 # SECURITY WARNING: don't run with debug turned on in production
-DEBUG = 0
+DEBUG = 1
 
 ALLOWED_HOSTS = ['127.0.0.1', '34.217.50.171']
 

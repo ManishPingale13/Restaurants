@@ -25,7 +25,7 @@
         <tr>
           <th scope="col">Order</th>
           <th scope="col">Customer</th>
-          <th scope="col">Status</th>
+          <th scope="col">Is delivered?</th>
         </tr>
       </thead>
       <tbody>
@@ -34,9 +34,38 @@
           <th scope="row">{{forloop.counter}}</th>
           <td>{{order.user}}</td>
           {% if order.is_delivered %}
-          <td>Delievered!</td>
+          <td>
+            <div class="form-check">
+              <input
+                id="orderId{{forloop.counter}}"
+                type="hidden"
+                value="{{order.id}}"
+              />
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheck{{forloop.counter}}"
+                checked
+              />
+            </div>
+          </td>
           {% else %}
-          <td>Cooking!</td>
+          <td>
+            <div class="form-check">
+              <input
+                id="orderId{{forloop.counter}}"
+                type="hidden"
+                value="{{order.id}}"
+              />
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheck{{forloop.counter}}"
+              />
+            </div>
+          </td>
           {% endif %}
         </tr>
         {% endfor %}
@@ -46,29 +75,56 @@
 </div>
 {% endblock body %} {% block js %}
 <script>
+
+  
+  $(document).on('click','.form-check-input', function (e) {
+    console.log("checked")
+    var identifier = this.id.substr(9);
+    var id = $(`#orderId${identifier}`).val();
+
+    $.ajax({
+      type: "POST",
+      url: "/dashboard/",
+      data: {
+        identifier: id,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      encode:true,
+    }).done(function(data){
+      data = JSON.parse(data)
+      if(data['status']=="success"){
+        console.log("Done")
+        window.location.reload()
+      }
+    }).fail(function (data){
+      console.log(data)
+    })
+  });
+
   $(".filter1").on("click", function (e) {
     var query;
     if (this.id == "pending") {
-      $(".dropdown-item").removeClass('active')
-      $(this).toggleClass('active');
+      $(".dropdown-item").removeClass("active");
+      $(this).toggleClass("active");
 
-      console.log("Pending");
       query = {
         pending: true,
         csrfmiddlewaretoken: "{{ csrf_token }}",
       };
     } else if (this.id == "delievered") {
-      $(".dropdown-item").removeClass('active')
-      $(this).toggleClass('active');
-      console.log("Delievered");
+      $(".dropdown-item").removeClass("active");
+      $(this).toggleClass("active");
+
       query = {
         pending: false,
         csrfmiddlewaretoken: "{{ csrf_token }}",
       };
     } else window.location.reload();
 
-    console.log(query);
+    doAjax(query);
+  });
 
+  function doAjax(query) {
     $.ajax({
       type: "POST",
       url: "/dashboard/",
@@ -77,29 +133,61 @@
     })
       .done(function (data) {
         data = JSON.parse(data);
-        if (data["status"] == "success") {
-          orders = data["orders"];
-          $("table tbody").empty();
-          for (i in orders) {
-            console.log(orders[i]);
-            if (orders[i].is_delivered == true)
-              $("tbody").append(`
-                <tr><th scope='row'>${i}</th>
-                <td>${orders[i].user}</td>
-                <td>Delievered</td></tr>`);
-            else
-              $("tbody").append(`
-                <tr><th scope='row'>${i}</th>
-                <td>${orders[i].user}</td>
-                <td>Pending</td></tr>`);
-          }
-        } else {
-          alert("Failed to retrieve data!");
-        }
+        fillData(data);
       })
       .fail(function (data) {
         console.log(data);
       });
-  });
+  }
+
+  function fillData(data) {
+    if (data["status"] == "success") {
+      orders = data["orders"];
+      $("table tbody").empty();
+      for (i in orders) {
+        if (orders[i].is_delivered == true)
+          $("tbody").append(`
+            <tr><th scope='row'>${i}</th>
+            <td>${orders[i].user}</td>
+            <td>
+              <div class="form-check">
+                <input
+                  id="orderId${i}"
+                  type="hidden"
+                  value="${orders[i].id}"
+                />
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheck${i}"
+                  checked
+                />
+              </div>
+            </td></tr>`);
+        else
+          $("tbody").append(`
+            <tr><th scope='row'>${i}</th>
+            <td>${orders[i].user}</td>
+            <td>
+              <div class="form-check">
+                <input
+                  id="orderId${i}"
+                  type="hidden"
+                  value="${orders[i].id}"
+                />
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheck${i}"
+                />
+              </div>
+            </td></tr>`);
+      }
+    } else {
+      alert("Failed to retrieve data!");
+    }
+  }
 </script>
 {% endblock js %}
