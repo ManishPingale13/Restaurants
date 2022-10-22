@@ -32,7 +32,7 @@
         {% for order in orders %}
         <tr id="otable">
           <th scope="row">{{forloop.counter}}</th>
-          <td>{{order.user}}</td>
+          <td>{{order.user.first_name}}</td>
           {% if order.is_delivered %}
           <td>
             <div class="form-check">
@@ -75,10 +75,10 @@
 </div>
 {% endblock body %} {% block js %}
 <script>
+  $("#addItem").hide();
 
-  
-  $(document).on('click','.form-check-input', function (e) {
-    console.log("checked")
+  $(document).on("click", ".form-check-input", function (e) {
+    console.log("checked");
     var identifier = this.id.substr(9);
     var id = $(`#orderId${identifier}`).val();
 
@@ -89,16 +89,18 @@
         identifier: id,
         csrfmiddlewaretoken: "{{ csrf_token }}",
       },
-      encode:true,
-    }).done(function(data){
-      data = JSON.parse(data)
-      if(data['status']=="success"){
-        console.log("Done")
-        window.location.reload()
-      }
-    }).fail(function (data){
-      console.log(data)
+      encode: true,
     })
+      .done(function (data) {
+        data = JSON.parse(data);
+        if (data["status"] == "success") {
+          console.log("Done");
+          window.location.reload();
+        }
+      })
+      .fail(function (data) {
+        console.log(data);
+      });
   });
 
   $(".filter1").on("click", function (e) {
