@@ -1,4 +1,5 @@
 import json
+from unittest import result
 
 import boto3
 from django.contrib import messages
@@ -6,10 +7,18 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.db.models import Count
 
 from home.models import Food, Order
 
 # Create your views here.
+
+
+def customers(request):
+    result= Order.objects.all().values('user','user__first_name').annotate(num=Count('user')).order_by('num')
+    
+        
+    return render(request, 'dashboard/customers.html', {'users': result})
 
 
 def deleteFood(request):
@@ -22,10 +31,6 @@ def deleteFood(request):
             "status": "success",
         }))
     return redirect('foods')
-
-
-def customers(request):
-    return render(request, 'dashboard/customers.html')
 
 
 def upload(image):
@@ -44,8 +49,8 @@ def foods(request):
         price = request.POST.get('price')
         foodId = request.POST.get('FoodId')
         image = request.FILES.get("image", '')
-        
-        #If item exists then updates, else creates new item
+
+        # If item exists then updates, else creates new item
         try:
             food = Food.objects.get(id=foodId)
             # Updating the existing food item
